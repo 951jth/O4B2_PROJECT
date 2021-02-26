@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.o4b2.pro.dao.NoticeDao">
+
+	<select id="getNList" parameterType="String"
+		resultType="com.o4b2.pro.dto.NoticeDto">
+		<![CDATA[
+		SELECT * FROM NLIST WHERE ROWNUM>=1 AND ROWNUM<=5
+		]]>
+	</select>
+	
+	<insert id="insertN" parameterType="com.o4b2.pro.dto.NoticeDto"
+		useGeneratedKeys="true" keyProperty="n_num">
+		<selectKey keyProperty="n_num" resultType="int"
+			order="BEFORE">
+			SELECT NOTICE_SEQ.NEXTVAL FROM DUAL	
+		</selectKey>
+		INSERT INTO "notice" VALUES(#{n_num}, #{m_id}, #{n_name}, SYSDATE,
+		DEFAULT, DEFAULT,DEFAULT, #{n_content}, 0)
+	</insert>
+	<update id="fileInsert" parameterType="HashMap">
+		UPDATE "notice" SET
+		N_FILE=#{n_file} WHERE N_NUM=#{n_num}
+	</update>
+	<select id="getNotice" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.NoticeDto">
+		SELECT * FROM "notice" WHERE N_NUM=#{n_num}	
+	</select>
+	<update id="nViewUp" parameterType="Integer">
+		UPDATE "notice" SET N_VIEW=N_VIEW+1 WHERE N_NUM=#{n_num}  
+	</update>
+	<select id="nfList" parameterType="Integer"
+		resultType="String">
+		SELECT N_FILE FROM "notice" WHERE N_NUM=#{n_num}	
+	</select>
+	<select id="getfile" parameterType="Integer"
+		resultType="String">
+		SELECT N_FILE FROM "no"	
+	</select>
+	
+	<update id="nUpdate" parameterType="com.o4b2.pro.dto.NoticeDto">
+		UPDATE "notice" SET N_NAME=#{n_name}, N_CONTENT=#{n_content}
+		WHERE N_NUM=#{n_num}
+	</update>
+	
+	<delete id="deleteN" parameterType="Integer">
+		DELETE FROM "notice" WHERE N_NUM=#{n_num}
+	</delete>
+</mapper>

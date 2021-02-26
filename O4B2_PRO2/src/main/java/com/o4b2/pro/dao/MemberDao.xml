@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.o4b2.pro.dao.MemberDao">
+
+
+	<select id="getEncPwd" parameterType="String"
+		resultType="String">
+		SELECT M_PWD FROM MEMBER WHERE M_ID=#{id}
+	</select>
+
+	<select id="getMemberInfo" parameterType="String"
+		resultType="com.o4b2.pro.dto.MemberDto">
+		SELECT * FROM MEMBER WHERE M_ID=#{id}
+	</select>
+
+	<insert id="memberInsert"
+		parameterType="com.o4b2.pro.dto.MemberDto">
+		INSERT INTO MEMBER VALUES (#{m_id}, #{m_pwd}, #{m_name},
+		#{m_phone}, #{m_addr}, #{m_birth}, #{m_rrn}, #{m_gender}, #{m_mail})
+	</insert>
+
+	<update id="MemberUpdate"
+		parameterType="com.o4b2.pro.dto.MemberDto">
+		UPDATE MEMBER
+		SET M_PWD = #{m_pwd}, M_PHONE = #{m_phone}, M_MAIL = #{m_mail}
+		WHERE M_ID = #{m_id}
+	</update>
+	
+	<select resultType="String" parameterType="Integer" id="MsearchId">
+	SELECT M_ID FROM MEMBER WHERE M_PHONE=#{m_phone} 
+	</select>
+
+	<select resultType="String" parameterType="String" id="MsearchPwd">
+	SELECT M_PWD FROM MEMBER WHERE M_ID=#{m_id} 
+	</select>
+	
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM MEMBER WHERE M_ID=#{id}
+	</select>
+	
+	<delete id="memberDelete" parameterType="String">
+		DELETE FROM MEMBER WHERE M_ID=#{m_id} 	  
+	</delete>
+</mapper>

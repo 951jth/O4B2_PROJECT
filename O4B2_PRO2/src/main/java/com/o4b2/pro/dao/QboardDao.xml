@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.o4b2.pro.dao.QboardDao">
+
+	<select id="getList" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.QboardDto">
+		<![CDATA[
+		SELECT * FROM QBLIST
+		WHERE RONUM>=#{pageNum}*10-9
+		AND RONUM<=#{pageNum}*10
+		]]>
+	</select>
+
+	<select id="getBoardCnt" resultType="Integer">
+		SELECT COUNT(*) FROM QBLIST
+	</select>
+
+	<insert id="qboardInsert"
+		parameterType="com.o4b2.pro.dto.QboardDto" useGeneratedKeys="true"
+		keyProperty="qb_num">
+		<selectKey keyProperty="qb_num" resultType="int"
+			order="BEFORE">
+			SELECT QBOARD_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO QBOARD
+		VALUES (${qb_num},#{m_id},#{qb_title},
+		#{qb_contents},SYSDATE,DEFAULT)
+	</insert>
+
+	<update id="fileInsert" parameterType="HashMap">
+		UPDATE QBOARD SET
+		QB_FILE=#{qb_file} WHERE QB_NUM=#{qb_num}
+	</update>
+
+	<select id="getContents" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.QboardDto">
+		SELECT * FROM QBOARD WHERE QB_NUM=#{qb_num}
+	</select>
+
+	<select id="getBfListQ" parameterType="Integer"
+		resultType="String">
+		SELECT QB_FILE FROM QBOARD WHERE QB_NUM=#{qb_num}
+	</select>
+
+	<select id="getReplyList" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.QcommentDto">
+		SELECT * FROM QCOMMENT WHERE QB_NUM=#{qb_num}
+	</select>
+
+	<insert id="replyInsert"
+		parameterType="com.o4b2.pro.dto.QcommentDto">
+		INSERT INTO QCOMMENT
+		VALUES
+		(QCOMMENT_SEQ.NEXTVAL,#{m_id},#{qbc_comment},SYSDATE,#{qb_num})
+	</insert>
+
+	<select id="getfile" parameterType="Integer" resultType="String">
+		SELECT
+		QB_FILE FROM QBOARD WHERE QB_NUM=#{qb_num}
+	</select>
+
+	<update id="qboardUp" parameterType="com.o4b2.pro.dto.QboardDto">
+		UPDATE QBOARD SET
+		QB_TITLE=#{qb_title}, QB_CONTENTS=#{qb_contents} WHERE QB_NUM=#{qb_num}
+	</update>
+	<delete id="replyDelete" parameterType="Integer">
+		DELETE FROM QCOMMENT WHERE QB_NUM=#{q_num}
+	</delete>
+	
+	<delete id="boardDelete" parameterType="Integer">
+		DELETE FROM QBOARD WHERE QB_NUM=#{q_num}
+	</delete>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.o4b2.pro.dao.ReviewDao">
+	<!-- 반환이 List일 경우 한 항목에 대한 type을 지정  -->
+	<select id="getList" parameterType="Integer" 
+		resultType="com.o4b2.pro.dto.ReviewDto">
+		<![CDATA[
+		SELECT * FROM RLIST
+		WHERE ROWNUM>=#{pageNum}*5-4
+		AND ROWNUM<=#{pageNum}*5
+		]]>
+	</select>
+	
+	<select id="getReviewCnt" resultType="Integer">
+		SELECT COUNT(*) FROM RLIST
+	</select>
+	
+	<select id="getContents" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.ReviewDto">
+		SELECT * FROM RLIST WHERE R_NUM=#{r_num}
+	</select>
+	
+	<select id="reviewSelect" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.ReviewDto">
+		select * from RLIST WHERE R_NUM=#{r_num}	
+	</select>
+	
+	<insert id="reviewWrite" parameterType="com.o4b2.pro.dto.ReviewDto"
+		useGeneratedKeys="true" keyProperty="r_num">
+		<selectKey keyProperty="r_num" resultType="int"
+			order="BEFORE">
+			SELECT REVIEW_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	
+		INSERT INTO REVIEW(R_NUM, M_ID, R_DATE, R_STAR,R_LIKE, 
+		H_NAME, D_NAME, R_TITLE, R_CONTENTS)
+		VALUES(${r_num},#{m_id},SYSDATE, #{r_star}, 0, 
+		#{h_name}, #{d_name}, #{r_title}, #{r_contents})
+	</insert>
+	
+	<update id="fileInsert" parameterType="HashMap">
+		UPDATE REVIEW SET R_IMAGE=#{r_image} WHERE R_NUM=#{r_num}
+	</update>
+	
+	<delete id="rDeleteProc" parameterType="Integer">
+		DELETE FROM REVIEW WHERE R_NUM=#{r_num} 
+	</delete>
+	<update id="updateReview" parameterType="com.o4b2.pro.dto.ReviewDto">
+		UPDATE REVIEW SET H_NAME=#{h_name}, R_STAR=#{r_star}, D_NAME=#{d_name}
+		, R_TITLE=#{r_title}, R_CONTENTS=#{r_contents} WHERE R_NUM=#{r_num}
+	</update>
+</mapper>

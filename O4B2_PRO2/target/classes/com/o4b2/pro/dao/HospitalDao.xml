@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.o4b2.pro.dao.HospitalDao">
+	<select id="getHPwd" parameterType="String" resultType="String">
+		SELECT
+		H_PWD FROM HOSPITAL WHERE H_ID=#{id}
+	</select>
+
+	<select id="getHospitalInfo" parameterType="String"
+		resultType="com.o4b2.pro.dto.HospitalDto">
+		SELECT * FROM HOSPITAL WHERE H_ID=#{id}
+	</select>
+
+
+	<insert id="HospitalInsert"
+		parameterType="com.o4b2.pro.dto.HospitalDto">
+		INSERT INTO HOSPITAL VALUES(#{h_id},#{h_pwd},#{h_repre},
+		#{h_name},#{h_crn},default,default,#{h_addr},
+		#{h_major},#{h_cn},#{h_call})
+	</insert>
+
+	<update parameterType="com.o4b2.pro.dto.HospitalDto"
+		id="HospitalUpdate">
+		UPDATE HOSPITAL SET H_PWD = #{h_pwd}, H_REPRE = #{h_repre}, H_CN = #{h_cn}
+		WHERE H_ID = #{h_id}
+	</update>
+
+	<update id="fileInsert" parameterType="HashMap">
+		UPDATE HOSPITAL SET H_IMAGE=#{h_image}
+		WHERE H_ID=#{h_id}
+	</update>
+
+	<update id="regInsert" parameterType="HashMap">
+		UPDATE HOSPITAL SET H_REG=#{h_reg}
+		WHERE H_ID=#{h_id}
+	</update>
+
+	<select id="getImage" parameterType="Integer"
+		resultType="String">
+		SELECT
+		SB_FILE FROM SBOARD WHERE H_NUM=#{h_num}
+	</select>
+
+	<insert id="insertDoctor"
+		parameterType="com.o4b2.pro.dto.DoctorDto" useGeneratedKeys="true"
+		keyProperty="d_num">
+		<selectKey keyProperty="d_num" resultType="int"
+			order="BEFORE">
+			SELECT DOCTOR_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO DOCTOR(D_NUM, H_ID, D_NAME, D_MAJOR, D_DIMAGE,
+		D_COMMENT) VALUES(#{d_num},#{h_id},#{d_name},#{d_major},default,
+		#{d_comment})
+	</insert>
+
+
+	<update id="doctorImgInsert"
+		parameterType="HashMap">
+		UPDATE DOCTOR SET D_DIMAGE=#{d_dimage} WHERE
+		D_NUM=#{d_num}
+	</update>
+
+	<select id="getHospital" parameterType="String"
+		resultType="com.o4b2.pro.dto.HospitalDto">
+		SELECT * FROM HOSPITAL WHERE H_NAME=#{hos}
+	</select>
+
+	<select id="getHosMajor" parameterType="String"
+		resultType="com.o4b2.pro.dto.HospitalDto">
+		SELECT * FROM HOSPITAL WHERE H_Major LIKE '%${hos}%'
+	</select>
+
+	<select resultType="String" parameterType="Integer"
+		id="HosSearchId">
+		SELECT H_ID FROM HOSPITAL WHERE H_CN=#{h_cn}
+	</select>
+
+	<select resultType="String" parameterType="String"
+		id="HosSearchPwd">
+		SELECT H_PWD FROM HOSPITAL WHERE H_ID=#{h_id}
+	</select>
+
+	<select resultType="com.o4b2.pro.dto.DScheduleDto"
+		parameterType="Integer" id="getSchedule">SELECT * FROM DSCHEDULE WHERE
+		D_NUM=#{d_num} </select>
+
+	<select resultType="Integer" parameterType="String" id="getDnum">
+		SELECT D_NUM FROM DOCTOR WHERE D_NAME=#{doc} AND H_ID=#{hId}
+	</select>
+
+	<select resultType="String" parameterType="Integer" id="getMid">
+		SELECT M_ID FROM MEDICAL WHERE ME_NUM=#{meNum}
+	</select>
+
+	<select resultType="String" parameterType="String" id="getMname">
+		SELECT M_NAME FROM MEMBER WHERE M_ID=#{mId}
+	</select>
+	
+	<select id="getDoctor" parameterType="String" 
+		resultType="com.o4b2.pro.dto.DoctorDto">
+		SELECT * FROM DOCTOR WHERE H_ID=#{hId}
+	</select>
+	
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM HOSPITAL WHERE H_ID=#{id}
+	</select>
+	
+	<delete id="deleteDoctor" parameterType="Integer">
+		DELETE FROM DOCTOR WHERE D_NUM=#{d_num}
+	</delete>
+</mapper>
+
+
+

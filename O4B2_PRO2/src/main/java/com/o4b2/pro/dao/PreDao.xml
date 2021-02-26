@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.o4b2.pro.dao.PreDao">
+	
+	<select id="selectMInfo" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.MedicalDto">
+	SELECT * FROM MEDICAL WHERE ME_NUM=#{me_num}
+	</select>
+	
+	<select id="getHosName" parameterType="String"
+		resultType="String">
+		SELECT H_NAME FROM HOSPITAL WHERE H_ID=#{Id}
+	</select>
+	
+	<insert id="insertPre" parameterType="com.o4b2.pro.dto.PrescriptionDto"
+		useGeneratedKeys="true" keyProperty="p_num">
+		<selectKey keyProperty="p_num" resultType="int"
+			order="BEFORE">
+			SELECT PRE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PRE(P_NUM,H_ID,M_ID,D_NUM,ME_NUM,P_MAJOR,P_DATE,P_COMMENT,P_HNAME
+		,P_DNAME) VALUES (#{p_num}, #{h_id}, #{m_id}, #{d_num}
+		,#{me_num},#{p_major},#{p_date}, #{p_comment}, #{p_hname}, #{p_dname})
+	</insert>
+	
+	<update id="fileInsert" parameterType="HashMap">
+		UPDATE PRE SET P_IMAGE=#{p_image} WHERE P_NUM=#{p_num}
+	</update>
+	
+	<select id="selectPInfo" parameterType="String"
+		resultType="com.o4b2.pro.dto.PrescriptionDto">
+		SELECT * FROM PRE WHERE M_ID=#{m_id}
+	</select>
+	
+	<select id="selectPHos" parameterType="String"
+		resultType="com.o4b2.pro.dto.PrescriptionDto">
+		SELECT * FROM PRE WHERE H_ID=#{h_id}	
+	</select>
+	
+	<select id="preSelect" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.PrescriptionDto">
+		SELECT * FROM PRE WHERE P_NUM=#{p_num}	
+	</select>
+	<select id="getPreCnt" resultType="Integer">
+		SELECT COUNT(*) FROM PRE
+	</select>
+	<delete id="deletePre" parameterType="Integer">
+		DELETE FROM PRE WHERE P_NUM=${p_num}
+	</delete>
+	
+</mapper>

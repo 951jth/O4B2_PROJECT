@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.o4b2.pro.dao.MedicalDao">
+
+	<select resultType="String" parameterType="String" id="getHosId">
+	SELECT H_ID FROM HOSPITAL WHERE H_NAME=#{hosName} 
+	</select>
+
+	<select resultType="String" parameterType="String"
+		id="getHosName">SELECT H_NAME FROM HOSPITAL WHERE H_ID=#{hosId} </select>
+
+	<insert parameterType="com.o4b2.pro.dto.MedicalDto" id="medIn"
+		useGeneratedKeys="true">INSERT INTO MEDICAL VALUES
+		(#{me_num},#{m_id},#{h_id},#{d_num},#{m_date},#{m_phone},#{me_name},#{me_major},#{d_name},'예약중',DEFAULT,#{me_text},#{me_time})
+	</insert>
+
+	<select resultType="com.o4b2.pro.dto.MedicalDto"
+		parameterType="String" id="getComMedi">SELECT * FROM MEDICAL WHERE M_ID=#{mId} and
+		ME_PATTERN!='예약중' </select>
+
+	<select resultType="com.o4b2.pro.dto.MedicalDto"
+		parameterType="String" id="getMedi"> SELECT * FROM MEDICAL WHERE M_ID=#{mId} and
+		ME_PATTERN='예약중' </select>
+
+	<select resultType="com.o4b2.pro.dto.MedicalDto"
+		parameterType="String" id="hgetComMedi"> SELECT * FROM MEDICAL WHERE H_ID=#{hId} and
+		ME_PATTERN!='예약중' </select>
+
+	<select resultType="com.o4b2.pro.dto.MedicalDto"
+		parameterType="String" id="hgetMedi"> SELECT * FROM MEDICAL WHERE H_ID=#{hId} and
+		ME_PATTERN='예약중' </select>
+
+	<select resultType="int" parameterType="HashMap" id="getDocId"> SELECT
+		D_NUM FROM DOCTOR WHERE H_ID=#{h_id} AND D_NAME=#{d_name} </select>
+
+	<select resultType="String" parameterType="Integer"
+		id="getDocName">SELECT D_NAME FROM DOCTOR WHERE D_NUM=#{docNum} </select>
+
+	<select resultType="String" parameterType="String" id="getMajor">SELECT
+		H_MAJOR FROM HOSPITAL WHERE H_ID=#{hId} </select>
+
+	<select resultType="String" parameterType="String"
+		id="getDocList">SELECT D_NAME FROM DOCTOR WHERE H_ID=#{hId} </select>
+
+	<select resultType="Integer" parameterType="String"
+		id="getD_num">SELECT D_NUM FROM DOCTOR WHERE H_ID=#{hId} </select>
+
+	<select resultType="String" parameterType="Integer"
+		id="getDName">SELECT D_NAME FROM DOCTOR WHERE D_NUM=#{d_num} </select>
+
+	<select resultType="com.o4b2.pro.dto.MedicalDto"
+		parameterType="String" id="getDList">SELECT D_NUM, D_NAME FROM DOCTOR WHERE
+		H_ID=#{hId} </select>
+
+	<delete parameterType="Integer" id="deleteMedi">
+	DELETE FROM MEDICAL WHERE
+		ME_NUM=#{me_num} </delete>
+
+	<update parameterType="Integer" id="rPermit">UPDATE MEDICAL SET
+		ME_PATTERN='진료완료' WHERE ME_NUM=#{me_num} </update>
+
+	<insert parameterType="com.o4b2.pro.dto.MedicalDto"
+		id="refuseProc">UPDATE MEDICAL SET ME_PATTERN='예약거부', 
+		ME_CREASON=#{me_creason}WHERE
+		ME_NUM=#{me_num} </insert>
+
+	<select resultType="String" parameterType="Integer"
+		id="getDocName2">SELECT D_NAME FROM DOCTOR WHERE D_NUM=#{docNum} </select>
+
+	<insert parameterType="com.o4b2.pro.dto.DScheduleDto"
+		id="setSchedule">INSERT INTO DSCHEDULE VALUES
+		(#{dc_date},#{me_num},#{d_num},#{dc_time},#{dc_num}) </insert>
+
+	<select resultType="Integer" id="getMeSeq">
+	SELECT MEDICAL_SEQ.NEXTVAL FROM
+		DUAL </select>
+
+	<select resultType="Integer" id="getDsSeq">
+	SELECT DSCHEDULE_SEQ.NEXTVAL FROM DUAL 
+	</select>
+
+</mapper>

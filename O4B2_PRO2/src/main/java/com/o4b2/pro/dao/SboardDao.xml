@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.o4b2.pro.dao.SboardDao">
+
+	<select id="getList" parameterType="String"
+		resultType="com.o4b2.pro.dto.SboardDto">
+		SELECT * FROM SBLIST
+		WHERE H_ID=#{h_id}
+	</select>
+
+	<select id="getBoardCnt" resultType="Integer">
+		SELECT COUNT(*) FROM SBLIST WHERE H_ID=#{hid}
+	</select>
+
+	<update id="viewUpdate" parameterType="Integer">
+		UPDATE SBOARD SET
+		SB_VIEW=SB_VIEW+1
+		WHERE SB_NUM=#{sb_num}
+	</update>
+
+	<select id="getContents" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.SboardDto">
+		SELECT * FROM SBOARD WHERE SB_NUM=#{sb_num}
+	</select>
+
+	<select id="getBfListS" parameterType="Integer"
+		resultType="String">
+		SELECT SB_FILE FROM SBOARD WHERE SB_NUM=#{sb_num}
+	</select>
+
+	<!-- <select id="getBfListQ" parameterType="Integer" resultType="com.o4b2.pro.dto.QboardDto"> 
+		SELECT QB_FILE FROM QBOARD WHERE QB_NUM=#{qb_num} </select> <select id="getBfListR" 
+		parameterType="Integer" resultType="com.o4b2.pro.dto.ReviewDto"> SELECT R_IMAGE 
+		FROM REVIEW WHERE R_NUM=#{r_num} </select> -->
+
+	<select id="getReplyList" parameterType="Integer"
+		resultType="com.o4b2.pro.dto.ScommentDto">
+		SELECT * FROM SCOMMENT WHERE SB_NUM=#{sb_num}
+	</select>
+
+	<insert id="sboardInsert"
+		parameterType="com.o4b2.pro.dto.SboardDto" useGeneratedKeys="true"
+		keyProperty="sb_num">
+		<selectKey keyProperty="sb_num" resultType="int"
+			order="BEFORE">
+			SELECT SBOARD_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO SBOARD
+		VALUES (${sb_num},#{m_id},DEFAULT,#{sb_name},
+		SYSDATE,DEFAULT,DEFAULT,#{sb_comment},#{h_id})
+	</insert>
+
+	<update id="fileInsert" parameterType="HashMap">
+		UPDATE SBOARD SET
+		SB_FILE=#{sb_file} WHERE SB_NUM=#{sb_num}
+	</update>
+
+	<select id="getfile" parameterType="Integer" resultType="String">
+		SELECT
+		SB_FILE FROM SBOARD WHERE SB_NUM=#{sb_num}
+	</select>
+
+	<insert id="replyInsert"
+		parameterType="com.o4b2.pro.dto.ScommentDto">
+		INSERT INTO SCOMMENT
+		VALUES (SCOMMENT_SEQ.NEXTVAL,#{sb_num},#{m_id},#{sc_board},DEFAULT)
+	</insert>
+
+	<update id="sboardUp" parameterType="com.o4b2.pro.dto.SboardDto">
+		UPDATE SBOARD SET
+		SB_NAME=#{sb_name}, SB_COMMENT=#{sb_comment} WHERE SB_NUM=#{sb_num}
+	</update>
+	
+	<delete id="boardDelete"
+		parameterType="Integer">
+		DELETE FROM SBOARD WHERE SB_NUM=#{s_num}	
+	</delete>
+	
+	<delete id="replyDelete"
+		parameterType="Integer">
+		DELETE FROM SCOMMENT WHERE SB_NUM=#{s_num}	
+	</delete>
+</mapper>
